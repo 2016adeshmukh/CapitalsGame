@@ -1,0 +1,391 @@
+<html>
+<title> The Capitals Game </title>
+
+
+
+<script type='text/javascript'>
+	var countries=['ALBANIA', 'ANDORRA', 'ARMENIA', 'AUSTRIA', 'AZERBAIJAN', 'BELARUS', 'BELGIUM', 'BOSNIA AND HERZEGOVINA', 'BULGARIA', 'CROATIA', 'CYPRUS', 'CZECH REPUBLIC', 'DENMARK', 'ESTONIA', 'FINLAND', 'FRANCE', 'GEORGIA', 'GERMANY', 'GREECE', 'HUNGARY', 'ICELAND', 'IRELAND', 'ITALY', 'KOSOVO', 'LATVIA', 'LIECHTENSTEIN', 'LITHUANIA', 'LUXEMBOURG', 'MACEDONIA', 'MALTA', 'MOLDOVA', 'MONACO', 'MONTENEGRO', 'NETHERLANDS', 'NORWAY', 'POLAND', 'PORTUGAL', 'ROMANIA', 'RUSSIA', 'SAN MARINO', 'SERBIA', 'SLOVAKIA', 'SLOVENIA', 'SPAIN', 'SWEDEN', 'SWITZERLAND', 'TURKEY', 'UKRAINE', 'UNITED KINGDOM', 'VATICAN CITY'];
+	var capitals=['TIRANA', 'ANDORRA LA VELLA', 'YEREVAN', 'VIENNA', 'BAKU', 'MINSK', 'BRUSSELS', 'SARAJEVO', 'SOFIA', 'ZAGREB', 'NICOSIA', 'PRAGUE', 'COPENHAGEN', 'TALLINN', 'HELSINKI', 'PARIS', 'TBILISI', 'BERLIN', 'ATHENS', 'BUDAPEST', 'REYKJAVIK', 'DUBLIN', 'ROME', 'PRISTINA', 'RIGA', 'VADUZ', 'VILNIUS', 'LUXEMBOURG', 'SKOPJE', 'VALLETTA', 'CHISINAU', 'MONACO', 'PODGORICA', 'AMSTERDAM', 'OSLO', 'WARSAW', 'LISBON', 'BUCHAREST', 'MOSCOW', 'SAN MARINO', 'BELGRADE', 'BRATISLAVA', 'LJUBLJANA', 'MADRID', 'STOCKHOLM', 'BERN', 'ANKARA', 'KIEV', 'LONDON', 'VATICAN CITY' ];
+	var indexEnter=[];
+	var tablenum=0;
+	var rownum=0;
+	//when table num 3 add new row
+
+	var seconds = 300;
+	var correct=0;
+	var randcap;
+	var randcount;
+	var randnum;
+	var countleft=countries.length;
+	var scorenum=0;
+	var minutes;
+	var remainingSeconds;
+	var countdownTimer;
+	function secondPassed() 
+	{
+		minutes = Math.round((seconds - 30)/60);
+		remainingSeconds = seconds % 60;
+		if (remainingSeconds < 10) 
+		{
+			remainingSeconds = "0" + remainingSeconds;  
+		}
+		document.getElementById('newtime').innerHTML = minutes + ":" + remainingSeconds;
+		if (seconds == 0) 
+		{
+			clearInterval(countdownTimer);
+			document.getElementById('newtime').innerHTML = "Buzz Buzz";
+		} 
+		else 
+		{
+			seconds--;
+		}
+	}
+	function startGame()
+	{
+			//has to create text bar and name of states and a rules thing that says name capital of european state/whatever they are called
+		var ex=document.getElementById('start');
+		ex.parentNode.removeChild(ex);
+		document.getElementById('description').innerHTML="Name the capital of the country:";
+		document.getElementById("mytext").disabled=false;
+		document.getElementById("mytext").style.backgroundColor="white";
+		document.getElementById("mytext").focus();
+		document.getElementById("mytext").select();
+		document.getElementById("tempbr").innerHTML="";
+		document.getElementById("makespacea").innerHTML="<br><br>"; 
+		enterGame();
+		countdownTimer = setInterval('secondPassed()',1000);
+		window.setTimeout("endFunc())", 301000);
+		document.getElementById("makespace").innerHTML="Score: 50 points for each correct capital entered and 5 points for each second left over after win <br>";
+		//window.setTimeout("endFunc()", 300000);
+	}
+	function enterGame()
+	{
+		var elemtxt=document.getElementById("mytext");
+		elemtxt=elemtxt.value.toUpperCase();
+		countleft=countries.length;
+		if(countleft==0)
+		{
+			winFunc();
+		}
+		document.getElementById("makespacea").innerHTML=countleft+" countries left";
+		if(correct==0)
+		{
+			randnum=Math.floor(Math.random() * countries.length);
+			randcount=countries[randnum];
+			randcap=capitals[randnum];
+			document.getElementById('thecountry').innerHTML=randcount;
+			correct=1;
+			enterGame();
+		}
+		else
+		{
+		if(elemtxt==randcap)
+		{
+			if(tablenum==4)
+			{
+				rownum++;
+				tablenum=0;
+			}
+			if(tablenum==2)
+			{
+				var table=document.getElementById("thebodya");
+				var row=table.insertRow(0);
+				var cella=row.insertCell(-1);
+				var cellb=row.insertCell(-1);
+				cella.innerHTML=randcount;
+				cellb.innerHTML=randcap;
+				tablenum++;
+				tablenum++;
+			}
+			if(tablenum==0)
+			{
+				var table=document.getElementById("thebody");
+				var row=table.insertRow(0);
+				var cella=row.insertCell(-1);
+				var cellb=row.insertCell(-1);
+				cella.innerHTML=randcount;
+				cellb.innerHTML=randcap;
+				tablenum++;
+				tablenum++;
+			}
+			mytext.value='';
+			correct=0;
+			countries.splice(randnum,1);
+			capitals.splice(randnum,1);
+			scorenum=scorenum+50;
+			document.getElementById("scoreid").innerHTML="Score:"+scorenum;
+			enterGame();
+		}
+		}
+		
+		
+		
+		
+		
+
+	}
+	function scoreIt()
+	{
+		scorenum=scorenum+(5*remainingSeconds);
+		scorenum=scorenum+(5*(60*minutes));
+
+	}
+	function endFunc()
+	{
+		var test=document.getElementById("thebody");
+		test.innerHTML="";
+		var test=document.getElementById("thebodya");
+		test.innerHTML="";
+		//this empties the table so i can replace it with what they got wrong
+		document.getElementById("yourprog").innerHTML="You Missed:";
+		var counter=0;
+		var set=countries.length;
+		rownum=0;
+		document.getElementById("scoreid").innerHTML="Score:"+scorenum;
+		while(counter<set)
+		{
+			var tempo=set-counter;
+			if(tempo==1)
+			{
+				var table=document.getElementById("thebody");
+				var row=table.insertRow(rownum);
+				var cella=row.insertCell(-1);
+				var cellb=row.insertCell(-1);
+				cella.innerHTML=countries[counter];
+				cellb.innerHTML=capitals[counter];
+				counter++;
+			}
+			else
+			{
+				var table=document.getElementById("thebody");
+				var tablea=document.getElementById("thebodya");
+				var row=table.insertRow(rownum);
+				var rowa=tablea.insertRow(rownum);
+				var cella=row.insertCell(-1);
+				var cellb=row.insertCell(-1);
+				var cellc=rowa.insertCell(-1);
+				var celld=rowa.insertCell(-1);
+				cella.innerHTML=countries[counter];
+				cellb.innerHTML=capitals[counter];
+				cellc.innerHTML=countries[counter+1];
+				celld.innerHTML=capitals[counter+1];
+				counter++;
+				counter++;
+			}
+		}
+
+	}
+	function winFunc()
+	{
+		alert("Good job, you named all 50 capitals!");
+		scoreIt();
+		document.getElementById("scoreid").innerHTML="Score:"+scorenum;
+		window.clearTimeout();
+		window.clearInterval(countdownTimer);
+		document.getElementById("mytext").disabled=true;
+		document.getElementById("thecountry").innerHTML="WINNER";
+		document.getElementById("newtime").innerHTML="";
+		document.getElementById("mytext").style.backgroundColor="transparent";
+		document.getElementById("mytext").value="";
+	}
+</script>
+
+
+
+
+
+
+<body >
+	<div id="head">
+		<p id="Capital"> Capitals Game: Europe Edition </p>
+		<p id="capitals"> Can you name the capital of every European country? </p>
+	<div id="left"> 
+			<p id="makespacea"> </p>
+			<p id="description"> To see if you can name <br>the capital of every European <br>country in 5 minutes, press Start: </p>
+		<p id="makespace"> <br><br> </p>
+			<button id ="start" type=button class="pure-button"onclick="startGame()"  style="color:red" accesskey=S> <u>S</u>tart </button>
+
+			<p id="tempbr"> <br> </p>
+
+			<input type="text" name="mytext" id="mytext" oninput="enterGame()" disabled="disabled" style="color:#FF0000"/>
+
+			<p id="thecountry"> </p> 
+			<p id="newtime"> </p>
+	</div>
+	<div id="right">
+		<p id="yourprog"> Your Progress: </p>
+		<table id="listed" border="1" style="float:left;"> 
+			<thead id="thehead">
+				<tr>
+					<td>COUNTRY</td>
+					<td> CAPITAL </td>
+				</tr>
+			</thead>
+			<tbody id="thebody">
+			</tbody>
+		</table>
+		<table id="listeda" border="1" style="float:left;"> 
+			<thead id="theheada">
+				<tr>
+					<td>COUNTRY</td>
+					<td> CAPITAL </td>
+				</tr>
+			</thead>
+			<tbody id="thebodya">
+			</tbody>
+		</table>
+	</div>
+	<div id="score">
+		<p id="scoreid"> Score: 0 </p>
+	</div>
+</body>
+
+
+
+
+<style>
+	body
+	{
+		background-image:url(tower.jpg);
+		background-repeat: no-repeat;
+		background-size:cover;
+	}
+	#head
+	{
+		width:100%;
+		height:100px;
+		background-color:none;
+	}
+	#left
+	{
+		width:450px;
+		height: 300px;
+		background-color:none;
+		border: 4px solid red;
+		border-radius:40px;
+		position: fixed;
+		margin:0;
+		padding:0;
+		top:15%;
+		left:10%;
+		text-align:center;
+	}
+	#right
+	{
+		width:550px;
+		height: 570px;
+		background-color:none;
+		border: 4px solid red;
+		border-radius:40px;
+		position: fixed;
+		margin:0;
+		padding:0;
+		top:10%;
+		left:57%;
+		text-align:center;
+	}
+	#start
+	{
+		color:red;
+		text-align:center;
+	}
+	#score
+	{
+		width:450px;
+		height: 100px;
+		background-color:none;
+		border:4px solid red;
+		border-radius:40px;
+		position: fixed;
+		margin:0;
+		padding:0;
+		top:60%;
+		left:10%;
+	}
+	#Capital
+	{
+		text-align: center; 
+  		vertical-align: top;
+  		color:red;
+  		font-weight: bold;
+  		font-size:125%;
+	}
+	#capitals
+	{
+		text-align:center;
+		vertical-align:baseline;
+		color:red;
+	}
+	#scoreid
+	{
+		font-size:200%;
+		font-weight:bold;
+		color:red;
+		text-align:center;
+		vertical-align:middle;
+	}
+	#description
+	{
+		text-align:center;
+		vertical-align:middle;
+		color:black;
+		font-weight:bold;
+		font-size:125%;
+	}
+	#yourprog
+	{
+		text-align:center;
+		vertical-align:top;
+		color:red;
+		font-weight:bold;
+		font-size:125%;
+		margin:0;
+	}
+	#mytext
+	{
+		background-color:transparent;
+		border: 0px solid white;
+	}
+	#thecountry
+	{
+		font-weight:bold;
+	}
+	#listed
+	{
+		margin-left:15px;
+	}
+	#thebody
+	{
+		color:black;
+		margin:0 auto;
+		border: 2px double black;
+		font-weight:bold;
+		background-color:#666666;
+		margin-right:0;
+		margin-left:50px;
+		font-size:75%;
+	}
+	#thebodya
+	{
+		color:black;
+		margin:0 auto;
+		border: 2px double black;
+		font-weight:bold;
+		background-color:#666666;
+		margin:0;
+		font-size:75%;
+	}
+	#makespacea
+	{
+		font-weight:bold;
+	}
+	#thehead
+	{
+		background-color:red;
+	}
+	#theheada
+	{
+		background-color:red;
+	}
+</style>
+</html>
